@@ -1,0 +1,4 @@
+config:
+  azure-native:location: northeurope
+  flexconsumptionplan:functionAppRuntime: dotnet-isolated
+  flexconsumptionplan:functionAppVersion: "8.0"
