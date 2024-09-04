@@ -19,7 +19,5 @@ public class HelloFlexConsumptionPlan
     {
         _logger.LogInformation("C# HTTP trigger function processed a request.");
         return new OkObjectResult("Hello Azure Functions Flex Consumption Plan!");
-        
     }
-
 }

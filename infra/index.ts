@@ -11,7 +11,7 @@ const config = new Config()
 
 const resourceGroup = new resources.ResourceGroup(`rg-flexconsumption-${stackName}`)
 
-const storageAccount = new storage.StorageAccount('stflexconsumpdev', {
+const storageAccount = new storage.StorageAccount(`stflexconsump${stackName}`, {
   resourceGroupName: resourceGroup.name,
   allowBlobPublicAccess: false,
   kind: storage.Kind.StorageV2,
@@ -20,7 +20,7 @@ const storageAccount = new storage.StorageAccount('stflexconsumpdev', {
   },
 })
 
-new storage.BlobContainer('deploymentPackageContainer', {
+const blobContainer = new storage.BlobContainer('deploymentPackageContainer', {
   resourceGroupName: resourceGroup.name,
   accountName: storageAccount.name,
   containerName: 'deploymentpackage',
@@ -54,7 +54,7 @@ const functionApp = new WebApp(`func-flexconsumption-${stackName}`, {
     deployment: {
       storage: {
         type: 'blobContainer',
-        value: pulumi.interpolate`${storageAccount.primaryEndpoints.blob}deploymentpackage`,
+        value: pulumi.interpolate`${storageAccount.primaryEndpoints.blob}${blobContainer.name}`,
         authentication: {
           type: 'SystemAssignedIdentity'
         }
@@ -62,7 +62,7 @@ const functionApp = new WebApp(`func-flexconsumption-${stackName}`, {
     },
     scaleAndConcurrency: {
       instanceMemoryMB: 2048,
-      maximumInstanceCount: 100
+      maximumInstanceCount: 100,
     },
     runtime: {
       name: config.require('functionAppRuntime'),
